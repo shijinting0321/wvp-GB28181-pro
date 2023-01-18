@@ -1,6 +1,18 @@
 spring:
   application:
     name: wvp
+  cloud:
+    consul:
+      enabled: false
+      host: localhost
+      port: 8500
+      discovery:
+        instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}
+        tags: cec,saas,basic,data
+        health-check-critical-timeout: 2h
+        health-check-interval: 15s
+        prefer-ip-address: true
+        health-check-path: /actuator/health
   profiles:
     active: dev
   # [可选]上传文件大小限制
@@ -10,21 +22,21 @@ spring:
       max-request-size: 100MB
   # REDIS数据库配置
   redis:
-    # [必须修改] Redis服务器IP, REDIS安装在本机的,使用127.0.0.1
-    host: 127.0.0.1
+    # [必须修改] Redis服务器IP, REDIS安装在本机的,使用localhost
+    host: localhost
     # [必须修改] 端口号
     port: 6379
     # [可选] 数据库 DB
     database: 6
     # [可选] 访问密码,若你的redis服务器没有设置密码，就不需要用密码去连接
-    password: 123456
+    password: face2020
     # [可选] 超时时间
     timeout: 10000
     # mysql数据源
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/wvp?useUnicode=true&characterEncoding=UTF8&rewriteBatchedStatements=true&serverTimezone=PRC&useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/wvp?useUnicode=true&characterEncoding=UTF8&rewriteBatchedStatements=true&serverTimezone=PRC&useSSL=false&allowMultiQueries=true
     username: root
     password: 123456
     druid:
@@ -40,7 +52,7 @@ spring:
       poolPreparedStatements: false         # 是否開啟PSCache，並且指定每個連線上PSCache的大小
       timeBetweenEvictionRunsMillis: 60000  # 配置間隔多久才進行一次檢測，檢測需要關閉的空閒連線，單位是毫秒
       minEvictableIdleTimeMillis: 300000    # 配置一個連線在池中最小生存的時間，單位是毫秒
-      filters: stat,slf4j             # 配置监控统计拦截的filters，监控统计用的filter:sta, 日志用的filter:log4j
+      filters: stat,wall,slf4j              # 配置监控统计拦截的filters，监控统计用的filter:sta, 日志用的filter:log4j, 防御sql注入的filter:wall
       useGlobalDataSourceStat: true         # 合并多个DruidDataSource的监控数据
       # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000
@@ -56,6 +68,7 @@ spring:
     # 假如已经执行了版本1和版本3，如果增加了一个版本2，下面这个选项将会允许执行版本2的脚本
     out-of-order: true
     table: flyway_schema_history_${spring.application.name}  #用于记录所有的版本变化记录
+
 #[可选] WVP监听的HTTP端口, 网页和接口调用都是这个端口
 server:
   port: 18080
@@ -63,7 +76,7 @@ server:
 # 作为28181服务器的配置
 sip:
   # [必须修改] 本机的IP
-  ip: 192.168.41.16
+  ip: ${spring.cloud.client.ip-address}
   # [可选] 28181服务监听的端口
   port: 5060
   # 根据国标6.1.2中规定，domain宜采用ID统一编码的前十位编码。国标附录D中定义前8位为中心编码（由省级、市级、区级、基层编号组成，参照GB/T 2260-2007）
@@ -78,6 +91,7 @@ sip:
 
 #zlm 默认服务器配置
 media:
+  enable: true
   id: FQ3TF8yT83wh5Wvz
   # [必须修改] zlm服务器的内网IP
   ip: 192.168.41.16
@@ -95,9 +109,6 @@ media:
     send-port-range: 30000,30500 # 端口范围
   # 录像辅助服务， 部署此服务可以实现zlm录像的管理与下载， 0 表示不使用
   record-assist-port: 18081
-# [可选] 日志配置, 一般不需要改
-logging:
-  config: classpath:logback-spring-local.xml
 
 # 版本信息， 不需修改
 version:

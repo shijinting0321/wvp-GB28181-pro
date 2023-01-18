@@ -1,7 +1,6 @@
 package com.genersoft.iot.vmp.conf;
 
 import com.genersoft.iot.vmp.common.ApiSaveConstant;
-import com.genersoft.iot.vmp.conf.security.SecurityUtils;
 import com.genersoft.iot.vmp.service.ILogService;
 import com.genersoft.iot.vmp.storager.dao.dto.LogDto;
 import com.genersoft.iot.vmp.utils.DateUtil;
@@ -38,11 +37,11 @@ public class ApiAccessFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
         String username = null;
-        if (SecurityUtils.getUserInfo() == null) {
-            username = servletRequest.getParameter("username");
-        }else {
-            username = SecurityUtils.getUserInfo().getUsername();
-        }
+        //if (SecurityUtils.getUserInfo() == null) {
+        //    username = servletRequest.getParameter("username");
+        //}else {
+        //    username = SecurityUtils.getUserInfo().getUsername();
+        //}
         long start = System.currentTimeMillis(); // 请求进入时间
         String uriName = ApiSaveConstant.getVal(servletRequest.getRequestURI());
 

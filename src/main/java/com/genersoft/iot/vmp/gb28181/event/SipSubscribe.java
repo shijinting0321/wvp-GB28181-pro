@@ -26,9 +26,9 @@ public class SipSubscribe {
 
     private final Logger logger = LoggerFactory.getLogger(SipSubscribe.class);
 
-    private Map<String, SipSubscribe.Event> errorSubscribes = new ConcurrentHashMap<>();
+    private Map<String, Event> errorSubscribes = new ConcurrentHashMap<>();
 
-    private Map<String, SipSubscribe.Event> okSubscribes = new ConcurrentHashMap<>();
+    private Map<String, Event> okSubscribes = new ConcurrentHashMap<>();
 
     private Map<String, Instant> okTimeSubscribes = new ConcurrentHashMap<>();
 
@@ -133,17 +133,17 @@ public class SipSubscribe {
         }
     }
 
-    public void addErrorSubscribe(String key, SipSubscribe.Event event) {
+    public void addErrorSubscribe(String key, Event event) {
         errorSubscribes.put(key, event);
         errorTimeSubscribes.put(key, Instant.now());
     }
 
-    public void addOkSubscribe(String key, SipSubscribe.Event event) {
+    public void addOkSubscribe(String key, Event event) {
         okSubscribes.put(key, event);
         okTimeSubscribes.put(key, Instant.now());
     }
 
-    public SipSubscribe.Event getErrorSubscribe(String key) {
+    public Event getErrorSubscribe(String key) {
         return errorSubscribes.get(key);
     }
 
@@ -155,7 +155,7 @@ public class SipSubscribe {
         errorTimeSubscribes.remove(key);
     }
 
-    public SipSubscribe.Event getOkSubscribe(String key) {
+    public Event getOkSubscribe(String key) {
         return okSubscribes.get(key);
     }
 

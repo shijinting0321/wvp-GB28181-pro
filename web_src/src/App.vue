@@ -18,16 +18,16 @@ export default {
       }
     }
   },
-  created() {
-    if(!this.$cookies.get("session")){
-      //如果没有登录状态则跳转到登录页
-      this.$router.push('/login');
-    }
-  },
+  // created() {
+  //   if(!this.$cookies.get("session")){
+  //     //如果没有登录状态则跳转到登录页
+  //     this.$router.push('/login');
+  //   }
+  // },
   //监听路由检查登录
-  watch:{
-    "$route" : 'checkLogin'
-  },
+  // watch:{
+  //   "$route" : 'checkLogin'
+  // },
   mounted(){
     //组件开始挂载时获取用户信息
     // this.getUserInfo();
